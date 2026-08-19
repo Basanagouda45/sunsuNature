@@ -1,0 +1,203 @@
+{
+  "app_name": "SUNSU",
+  "personality": "1 iOS-Native Clean with 3 Editorial pacing",
+  "personality_one_liner": "A premium, breathable, and visual-first storefront that feels like a modern natural wellness magazine.",
+  "color": {
+    "surface": "#F7F5F0",
+    "onSurface": "#172017",
+    "surfaceSecondary": "#FFFFFF",
+    "onSurfaceSecondary": "#172017",
+    "surfaceTertiary": "#EAE7DF",
+    "onSurfaceTertiary": "#3B473B",
+    "surfaceInverse": "#172017",
+    "onSurfaceInverse": "#F7F5F0",
+    "brand": "#15803D",
+    "brandPrimary": "#15803D",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#E65100",
+    "onBrandSecondary": "#FFFFFF",
+    "brandTertiary": "#DCFCE7",
+    "onBrandTertiary": "#15803D",
+    "success": "#16A34A",
+    "onSuccess": "#FFFFFF",
+    "warning": "#F59E0B",
+    "onWarning": "#FFFFFF",
+    "error": "#DC2626",
+    "onError": "#FFFFFF",
+    "info": "#0891B2",
+    "onInfo": "#FFFFFF",
+    "border": "#E5E2D9",
+    "borderStrong": "#C2BDB0",
+    "divider": "#EAE7DF",
+    "dark": {
+      "surface": "#121612",
+      "onSurface": "#F7F5F0",
+      "surfaceSecondary": "#1A211A",
+      "onSurfaceSecondary": "#F7F5F0",
+      "surfaceTertiary": "#263026",
+      "onSurfaceTertiary": "#EAE7DF",
+      "surfaceInverse": "#F7F5F0",
+      "onSurfaceInverse": "#121612",
+      "brandPrimary": "#16A34A",
+      "onBrandPrimary": "#FFFFFF",
+      "brandSecondary": "#F97316",
+      "onBrandSecondary": "#FFFFFF",
+      "brandTertiary": "#064E3B",
+      "onBrandTertiary": "#A7F3D0",
+      "border": "#2C382C",
+      "borderStrong": "#445544",
+      "divider": "#263026"
+    }
+  },
+  "typography": {
+    "displayFontFamily": "Plus Jakarta Sans",
+    "textFontFamily": "Plus Jakarta Sans",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Generous iOS-native padding. Group related elements tightly, but keep generous whitespace between major sections to let the photography breathe.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 6,
+    "md": 12,
+    "lg": 20,
+    "pill": 999
+  },
+  "shadow_tier": 1,
+  "navigation": "bottom_tabs",
+  "icon_set": "Feather",
+  "glassmorphism": {
+    "enabled": true,
+    "do's": [
+      "Use glass on bottom tab bar",
+      "Use glass on sticky headers over scrolling content",
+      "Use glass for floating action buttons or sticky 'Add to Cart' zones"
+    ],
+    "dont's": [
+      "Do not use glass on product cards or list rows",
+      "Do not over-stack blur layers"
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Splash & Onboarding",
+      "purpose": "Introduce the premium, natural ethos of SUNSU with full-bleed imagery.",
+      "states": {
+        "loading": "Subtle pulsing logo",
+        "empty": "N/A",
+        "error": "N/A"
+      },
+      "layout": "Full-bleed imagery of natural ingredients with a top-to-bottom transparent-to-dark scrim. Text and primary CTA anchored safely at the bottom third."
+    },
+    {
+      "name": "Home",
+      "purpose": "A digital magazine-style storefront prioritizing visual discovery and curated collections.",
+      "states": {
+        "loading": "Skeleton blocks matching the hero and grid layout",
+        "empty": "N/A",
+        "error": "Failed to load feed. Retry button."
+      },
+      "layout": "Scrollable feed: starts with a full-width hero promo carousel. Followed by a horizontally scrolling 'Categories' row (circular or rounded-rect imagery). Next, a 2-column 'Best Sellers' grid, 'Shop by Need' banner, and Trust/Reviews section. Search bar sticky at top."
+    },
+    {
+      "name": "Shop (PLP)",
+      "purpose": "Browse products efficiently with accessible filtering and clear item cards.",
+      "states": {
+        "loading": "Skeleton grid",
+        "empty": "No products match the selected filters. 'Clear Filters' CTA.",
+        "error": "Unable to load products. Retry button."
+      },
+      "layout": "Sticky chip-based filter row at the top below a clean header. 2-column grid of white cards on the off-white background. Cards show image (60% height), title, price, MRP strikethrough, discount tag (in brandSecondary), and a 'Quick Add' button."
+    },
+    {
+      "name": "Product Details (PDP)",
+      "purpose": "Act as the primary decision-making hub, minimizing cognitive load while providing rich detail.",
+      "states": {
+        "loading": "Skeleton image and text blocks",
+        "empty": "N/A",
+        "error": "Unable to load product info. Retry button."
+      },
+      "layout": "Fold 1: Edge-to-edge high-quality image carousel. Below image: Title, Rating, Price block, Variant chips (size/weight). Sticky 'Add to Cart' container at the very bottom (glass background). Lower sections: Expandable accordions for Ingredients, Nutrition, Reviews."
+    },
+    {
+      "name": "Cart & Checkout",
+      "purpose": "Frictionless review and payment flow with clear cost breakdowns.",
+      "states": {
+        "loading": "Spinner over total calculation",
+        "empty": "Illustration of an empty basket + 'Start Shopping' CTA.",
+        "error": "Error applying coupon or fetching shipping. Toast or inline alert."
+      },
+      "layout": "List of items with quantity controls. Clean breakdown of subtotal, shipping, and discount. Sticky primary CTA 'Proceed to Checkout' at the bottom."
+    },
+    {
+      "name": "Account & Orders",
+      "purpose": "Manage profile, addresses, and track order status.",
+      "states": {
+        "loading": "Skeleton list",
+        "empty": "No past orders. 'Start Browsing' CTA.",
+        "error": "Unable to fetch account details. Retry button."
+      },
+      "layout": "Clean list format (iOS settings style) for account options. Order tracking uses a vertical timeline layout with clear status indicators."
+    }
+  ],
+  "images": {
+    "onboarding_hero": {
+      "url": "https://images.pexels.com/photos/39060097/pexels-photo-39060097.jpeg",
+      "alt": "Dehydrated apples on a tray"
+    },
+    "home_hero_carousel_1": {
+      "url": "https://images.pexels.com/photos/5208223/pexels-photo-5208223.jpeg",
+      "alt": "Premium healthy food flatlay"
+    },
+    "category_powder": {
+      "url": "https://images.pexels.com/photos/6833682/pexels-photo-6833682.jpeg",
+      "alt": "Green wellness powder in a ceramic bowl"
+    },
+    "category_dehydrated": {
+      "url": "https://images.pexels.com/photos/36326589/pexels-photo-36326589.jpeg",
+      "alt": "Dehydrated citrus fruits"
+    }
+  },
+  "haptics": {
+    "button_press": "selection",
+    "add_to_cart": "success",
+    "tab_change": "selection",
+    "variant_select": "light"
+  },
+  "instructions_to_main_agent": [
+    "Strictly adhere to the user's palette: Background #F7F5F0, Primary green #15803D, Secondary #16A34A, text #172017, Cards #FFFFFF.",
+    "Use a warm fruit-inspired accent (#E65100 - vibrant orange) sparingly for discounts, badges, or secondary CTAs to offset the green and add warmth.",
+    "Typography: Use 'Plus Jakarta Sans' globally. It provides the requested 'Inter or better' modern, highly readable feel but with slightly more warmth and geometric structure.",
+    "Cards and Containers: Use 'md' (12px) radius. Avoid excessive pill shapes per user instruction. Stick to structural, clean rectangles with soft corners.",
+    "Ensure the 'Product Details (PDP)' screen has a sticky 'Add to Cart' container at the bottom over scrolling content, utilizing a glass background for premium feel.",
+    "For the Home screen, treat it like an editorial layout. Do not cram too many products into one row. Use ample spacing (`xl` to `2xl`) between sections.",
+    "Do NOT use indigo, purple, or blue anywhere in the app. If a system component defaults to blue, override it to `brandPrimary` (#15803D) or `onSurface`.",
+    "Order Tracking: Implement a clear, step-by-step vertical timeline for the order tracking screen.",
+    "All full-bleed images MUST have a top-to-bottom gradient scrim (transparent to surfaceInverse) to guarantee text contrast."
+  ]
+}
