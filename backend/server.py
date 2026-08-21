@@ -1,16 +1,17 @@
 import logging
+from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, APIRouter
+from fastapi import APIRouter, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from db import client, ensure_indexes
-from seed import run_seed
+from routers import admin as admin_router
 from routers import auth as auth_router
-from routers import catalog as catalog_router
 from routers import cart as cart_router
+from routers import catalog as catalog_router
 from routers import commerce as commerce_router
 from routers import orders as orders_router
-from routers import admin as admin_router
+from seed import run_seed
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,7 +19,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger("sunsu")
 
-app = FastAPI(title="SUNSU API")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup tasks
+    try:
+        await ensure_indexes()
+    except Exception as e:
+        logger.warning(f"Index creation warning: {e}")
+    await run_seed()
+    logger.info("SUNSU API started and seeded")
+
+    yield
+
+    # Shutdown tasks
+    client.close()
+
+
+app = FastAPI(title="SUNSU API", lifespan=lifespan)
 
 api_router = APIRouter(prefix="/api")
 
@@ -49,17 +67,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+if __name__ == "__main__":
+    import uvicorn
 
-@app.on_event("startup")
-async def startup():
-    try:
-        await ensure_indexes()
-    except Exception as e:
-        logger.warning(f"Index creation warning: {e}")
-    await run_seed()
-    logger.info("SUNSU API started and seeded")
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    client.close()
+    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
