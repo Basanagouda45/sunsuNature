@@ -1,6 +1,7 @@
 // Separate API client for the admin portal — uses its own bearer token so it
 // never collides with the customer session token.
-const BASE = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`;
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://sunsunature-3.onrender.com';
+const BASE = `${BACKEND_URL}/api`;
 
 let adminToken: string | null = null;
 export const setAdminToken = (t: string | null) => {

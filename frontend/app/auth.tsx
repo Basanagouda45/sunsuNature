@@ -72,7 +72,7 @@ export default function Auth() {
     } finally {
       setLoading(false);
     }
-  };
+  }; 
 
   const resend = async () => {
     if (timer > 0) return;

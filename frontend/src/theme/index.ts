@@ -1,6 +1,6 @@
 // SUNSU design tokens — sourced from design_guidelines.json
 export const colors = {
-  surface: '#F7F5F0',
+  surface: '#FFFFFF',
   onSurface: '#172017',
   card: '#FFFFFF',
   surfaceTertiary: '#EAE7DF',

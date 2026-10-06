@@ -205,3 +205,4 @@ const styles = StyleSheet.create({
   payMethod: { fontFamily: font.semibold, fontSize: fontSize.base, color: colors.onSurface },
   payStatus: { fontFamily: font.bold, fontSize: fontSize.sm },
 });
+

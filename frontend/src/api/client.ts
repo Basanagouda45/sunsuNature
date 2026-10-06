@@ -1,4 +1,5 @@
-const BASE = `${process.env.EXPO_PUBLIC_BACKEND_URL}/api`;
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://sunsunature-3.onrender.com';
+const BASE = `${BACKEND_URL}/api`;
 
 let authToken: string | null = null;
 export const setAuthToken = (t: string | null) => {

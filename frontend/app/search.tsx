@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, FlatList, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, FlatList, Dimensions, ActivityIndicator, Platform } from 'react-native';
 import { Image } from 'expo-image';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -83,10 +83,14 @@ export default function SearchScreen() {
             testID="search-input"
           />
           {q.length > 0 && (
-            <Pressable onPress={() => { setQ(''); setResults(null); }} hitSlop={8}><Feather name="x" size={18} color={colors.muted} /></Pressable>
+            <Pressable onPress={() => { setQ(''); setResults(null); }} hitSlop={8}>
+              <Feather name="x" size={18} color={colors.muted} />
+            </Pressable>
           )}
         </View>
-        <Pressable onPress={() => router.back()} hitSlop={8}><Text style={styles.cancel}>Cancel</Text></Pressable>
+        <Pressable onPress={() => router.back()} hitSlop={8}>
+          <Text style={styles.cancel}>Cancel</Text>
+        </Pressable>
       </View>
 
       {/* Suggestions dropdown */}
@@ -116,7 +120,9 @@ export default function SearchScreen() {
             contentContainerStyle={{ padding: spacing.lg }}
             keyboardShouldPersistTaps="handled"
             renderItem={({ item }) => (
-              <View style={{ marginBottom: GAP }}><ProductCard product={item} width={CARD_W} /></View>
+              <View style={{ marginBottom: GAP }}>
+                <ProductCard product={item} width={CARD_W} />
+              </View>
             )}
           />
         )
@@ -157,7 +163,16 @@ const styles = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: colors.surface },
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.lg, paddingBottom: spacing.md },
   searchBar: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: spacing.sm, backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, paddingHorizontal: spacing.md, height: 46 },
-  input: { flex: 1, fontFamily: font.medium, fontSize: fontSize.base, color: colors.onSurface },
+  input: {
+    flex: 1,
+    fontFamily: font.medium,
+    fontSize: fontSize.base,
+    color: colors.onSurface,
+    ...(Platform.OS === 'web' && {
+      outlineWidth: 0,
+      outlineStyle: 'none',
+    } as any),
+  },
   cancel: { fontFamily: font.semibold, fontSize: fontSize.base, color: colors.brand },
   suggestions: { backgroundColor: colors.card, marginHorizontal: spacing.lg, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
   suggestRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.divider },

@@ -143,7 +143,7 @@ async def cancel_order(order_id: str, current: User = Depends(get_current_user))
     doc = await db.orders.find_one({"_id": ObjectId(order_id), "user_id": current.id})
     if not doc:
         raise HTTPException(status_code=404, detail="Order not found")
-    if doc["status"] in ("Shipped", "Out for Delivery", "Delivered", "Cancelled"):
+    if doc["status"] in ( "Delivered", "Cancelled"):
         raise HTTPException(status_code=400, detail=f"Order cannot be cancelled once {doc['status']}")
     # restore stock
     for it in doc.get("items", []):

@@ -55,7 +55,7 @@ export default function OrderTracking() {
   const flow = order.status_flow || ['Order Placed', 'Confirmed', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered'];
   const cancelled = order.status === 'Cancelled';
   const currentIdx = flow.indexOf(order.status);
-  const canCancel = !cancelled && !['Shipped', 'Out for Delivery', 'Delivered'].includes(order.status);
+  const canCancel = !cancelled && ![  'Delivered'].includes(order.status);
 
   return (
     <View style={styles.wrap}>

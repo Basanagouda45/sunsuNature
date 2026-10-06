@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View, Easing } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
-import { storage } from '@/src/utils/storage';
 import { useAuth } from '@/src/context/AuthContext';
 import { colors, font, fontSize, spacing } from '@/src/theme';
 
@@ -26,8 +25,7 @@ export default function Splash() {
     if (!ready || decided.current) return;
     decided.current = true;
     const t = setTimeout(async () => {
-      const done = await storage.getItem<boolean>('sunsu_onboarded', false);
-      router.replace(done ? '/(tabs)' : '/onboarding');
+      router.replace( '/(tabs)');
     }, 1400);
     return () => clearTimeout(t);
   }, [ready, router]);
