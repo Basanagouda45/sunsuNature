@@ -13,7 +13,7 @@ from auth_utils import hash_password
 # P = "https://sunsuofficial.com/assets/images"
 
 # To this:
-P = "https://sunsunature-3.onrender.com/assets/images"
+P = "https://sunsunature-3.onrender.com/assets"
 
 CATEGORIES = [
     {"slug": "fruit-powders", "name": "Fruit Powders", "image": f"{P}/berry-14.png", "accent": "#E65100", "sort_order": 1},
@@ -114,7 +114,7 @@ def build_products():
             "SUNSU Mango Energy Mix combines sun-ripened mango, banana, rich cocoa and dates into a naturally sweet, energising powder. A convenient way to enjoy fruit-based nutrition any time of day.",
             "energy-mixes", "Energy Mixes", ["energy", "workout"], ["Vegan", "Gluten-Free"],
             ["Mango", "Banana", "Cocoa", "Dates"],
-            [f"{P}/mng.png", f"{P}/new-1.png", f"{P}/logo.png"],
+            [f"{P}/mango/box-12.png", f"{P}/mango/box-15.png", f"{P}/mango/box-16.png",f"{P}/all/box-13.png"],
             _variants(299, 599, 999), _nutrition(372, 6.2, 78, 9, 42),
             ["Supports everyday energy", "Naturally sweet, no added sugar", "Rich in naturally occurring nutrients"],
             4.7, 214, best=True, order=1,
@@ -125,7 +125,7 @@ def build_products():
             "A bright, tropical duo of dehydrated pineapple and coconut. Tangy, refreshing and perfect for smoothies or a quick pick-me-up drink.",
             "fruit-powders", "Fruit Powders", ["daily-wellness", "skin-glow"], ["Vegan", "Gluten-Free"],
             ["Pineapple", "Coconut"],
-            [f"{P}/berry-14.png", f"{P}/dig-11.png"],
+            [f"{P}/pineapple/pineapple-11.png", f"{P}/pineapple/pineapple-12.png",f"{P}/pineapple/pineapple-13.png",f"{P}/all/box-14.png"],
             _variants(279, 549, 949), _nutrition(345, 3.1, 74, 8, 48),
             ["Refreshing tropical taste", "Contains naturally occurring nutrients", "Convenient fruit nutrition"],
             4.5, 156, best=True, new=True, order=2,
@@ -136,7 +136,7 @@ def build_products():
             "Naturally sweetened with banana and dates, blended with cocoa and coconut for a wholesome chocolate-style drink the whole family will love.",
             "energy-mixes", "Energy Mixes", ["energy", "daily-wellness"], ["Vegan", "Gluten-Free"],
             ["Banana", "Dates", "Cocoa", "Coconut"],
-            [f"{P}/choc.png", f"{P}/logo.png"],
+            [f"{P}/choco/choco-11.png", f"{P}/choco/choco-12.png",f"{P}/choco/choco-13.png",f"{P}/all/all-12.png"],
             _variants(329, 649, 1099), _nutrition(388, 5.5, 80, 10, 40),
             ["Naturally sweet chocolate taste", "No refined sugar", "Great for kids & adults"],
             4.8, 302, best=True, order=3,
@@ -147,7 +147,7 @@ def build_products():
             "A delicate blend of hibiscus, strawberry, rose and lemon. Light, floral and refreshing — a beautiful everyday wellness ritual.",
             "wellness-blends", "Wellness Blends", ["immunity", "skin-glow"], ["Vegan", "Gluten-Free"],
             ["Hibiscus", "Strawberry", "Rose", "Lemon"],
-            [f"{P}/bery.png", f"{P}/new-2.png"],
+            [f"{P}/berry/berry-14.png", f"{P}/berry/berry-13.png",f"{P}/berry/berry-11.png",f"{P}/all/all-14.png"],
             _variants(349, 699, 1199), _nutrition(310, 2.4, 68, 7, 36),
             ["Supports everyday wellness", "Naturally vibrant colour", "Light & refreshing"],
             4.6, 128, new=True, order=4,
@@ -158,7 +158,7 @@ def build_products():
             "Single-origin beetroot, gently dehydrated and finely milled. An earthy, versatile powder loved before workouts and in everyday smoothies.",
             "vegetable-powders", "Vegetable Powders", ["energy", "workout", "immunity"], ["Vegan", "Gluten-Free", "Organic"],
             ["Beetroot"],
-            [f"{P}/nan.png", f"{P}/logo.png"],
+            [f"{P}/nannari/nannari-11.png", f"{P}/nannari/nannari-12.png",f"{P}/nannari/nannari-13.png",f"{P}/nannari/nannari-14.png"],
             _variants(259, 499, 849), _nutrition(330, 8.0, 66, 12, 44),
             ["Supports everyday stamina", "Single-ingredient purity", "Versatile in recipes"],
             4.4, 97, order=5,
@@ -169,7 +169,7 @@ def build_products():
             "Real dehydrated lemon milled into a fine, zesty powder. Add a burst of citrus to water, recipes and dressings instantly.",
             "immunity", "Immunity", ["immunity", "digestion"], ["Vegan", "Gluten-Free"],
             ["Lemon"],
-            [f"{P}/dig.png", f"{P}/logo.png"],
+            [f"{P}/digest/digest-11.png", f"{P}/digest/digest-12.png",f"{P}/digest/digest-13.png",f"{P}/digest/digest-14.png",],
             _variants(229, 449, 749), _nutrition(295, 3.8, 62, 11, 20),
             ["Bright citrus flavour", "Contains naturally occurring Vitamin C", "Convenient & long-lasting"],
             4.5, 141, order=6,
