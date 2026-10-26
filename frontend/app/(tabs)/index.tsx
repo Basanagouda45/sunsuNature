@@ -1,324 +1,8 @@
-// import { useCallback } from 'react';
-// import { View, Text, StyleSheet, ScrollView, Pressable, FlatList, Dimensions, RefreshControl } from 'react-native';
-// import { Image } from 'expo-image';
-// import { LinearGradient } from 'expo-linear-gradient';
-// import { Carousel } from 'react-native-reanimated-carousel';
-// import { Feather } from '@expo/vector-icons';
-// import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import { useRouter } from 'expo-router';
-// import { colors, font, fontSize, radius, shadow, spacing } from '@/src/theme';
-// import { useFetch } from '@/src/hooks/useFetch';
-// import { useAuth } from '@/src/context/AuthContext';
-// import { useLocation } from '@/src/context/LocationContext';
-// import { Banner, Category, Product } from '@/src/types';
-// import { ProductCard } from '@/src/components/ProductCard';
-// import { SectionHeader } from '@/src/components/SectionHeader';
-// import { SunLogo } from '@/src/components/SunLogo';
-// import { ProductCardSkeleton } from '@/src/components/Skeleton';
-
-// const { width } = Dimensions.get('window');
-// const CARD_W = 168;
-
-// const NEEDS = [
-//   { key: 'energy', label: 'Energy', icon: 'zap' },
-//   { key: 'immunity', label: 'Immunity', icon: 'shield' },
-//   { key: 'digestion', label: 'Digestion', icon: 'activity' },
-//   { key: 'daily-wellness', label: 'Daily Wellness', icon: 'sun' },
-//   { key: 'skin-glow', label: 'Skin & Glow', icon: 'star' },
-//   { key: 'workout', label: 'Workout', icon: 'trending-up' },
-// ];
-
-// const TRUST = [
-//   { icon: 'sun', label: 'Carefully Dehydrated' },
-//   { icon: 'check-circle', label: 'Quality Ingredients' },
-//   { icon: 'zap', label: 'Convenient Nutrition' },
-//   { icon: 'shield', label: 'Hygienically Packed' },
-// ];
-
-// const FOOTER_LINKS = ['About Sunsu', 'Contact', 'FAQ', 'Shipping', 'Returns', 'Privacy Policy', 'Terms', 'Refund Policy'];
-
-// export default function Home() {
-//   const insets = useSafeAreaInsets();
-//   const router = useRouter();
-//   const { user } = useAuth();
-//   const { location } = useLocation();
-
-//   const banners = useFetch<Banner[]>('/banners');
-//   const categories = useFetch<Category[]>('/categories');
-//   const best = useFetch<{ products: Product[] }>('/products?best_seller=true&limit=8');
-//   const fresh = useFetch<{ products: Product[] }>('/products?is_new=true&limit=8');
-
-//   const onRefresh = useCallback(() => {
-//     banners.reload();
-//     categories.reload();
-//     best.reload();
-//     fresh.reload();
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, []);
-
-//   const loading = best.loading && !best.data;
-
-//   return (
-//     <View style={styles.wrap}>
-//       {/* Header */}
-//       <View style={[styles.header, { paddingTop: insets.top + spacing.sm }]}>
-//         <SunLogo size={20} />
-//         <Pressable style={styles.location} onPress={() => router.push('/location')} testID="header-location">
-//           <Feather name="map-pin" size={13} color={colors.brand} />
-//           <Text style={styles.locText} numberOfLines={1}>
-//             {location ? `${location.city} • ${location.pincode}` : 'Set location'}
-//           </Text>
-//           <Feather name="chevron-down" size={14} color={colors.onSurfaceMuted} />
-//         </Pressable>
-//         <View style={styles.headerIcons}>
-//           <Pressable onPress={() => router.push('/(tabs)/cart')} testID="header-cart" hitSlop={6}>
-//             <Feather name="shopping-bag" size={22} color={colors.onSurface} />
-//           </Pressable>
-//         </View>
-//       </View>
-
-//       <ScrollView
-//         showsVerticalScrollIndicator={false}
-//         contentContainerStyle={{ paddingBottom: spacing.xxxl }}
-//         refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={colors.brand} />}
-//       >
-//         {/* Search */}
-//         <Pressable style={styles.search} onPress={() => router.push('/search')} testID="home-search">
-//           <Feather name="search" size={18} color={colors.muted} />
-//           <Text style={styles.searchText}>Search fruits, powders & wellness blends</Text>
-//         </Pressable>
-
-//         {/* Hero carousel */}
-//         {banners.data && banners.data.length > 0 && (
-//           <View style={styles.heroWrap}>
-//             <Carousel
-//               width={width - spacing.lg * 2}
-//               height={190}
-//               autoPlay
-//               autoPlayInterval={3800}
-//               loop
-//               data={banners.data}
-//               scrollAnimationDuration={700}
-//               style={{ width: width - spacing.lg * 2, height: 190, borderRadius: radius.lg }}
-//               renderItem={({ item }) => (
-//                 <Pressable
-//                   style={styles.hero}
-//                   onPress={() => router.push('/(tabs)/shop')}
-//                   testID="hero-banner"
-//                 >
-//                   <Image source={{ uri: item.image }} style={StyleSheet.absoluteFill as any} contentFit="cover" transition={250} />
-//                   <LinearGradient colors={['rgba(23,32,23,0.15)', 'rgba(23,32,23,0.75)']} style={StyleSheet.absoluteFill as any} />
-//                   <View style={styles.heroText}>
-//                     <Text style={styles.heroTitle}>{item.title}</Text>
-//                     {!!item.subtitle && <Text style={styles.heroSub} numberOfLines={2}>{item.subtitle}</Text>}
-//                     <View style={styles.heroCta}>
-//                       <Text style={styles.heroCtaText}>{item.cta_text || 'Shop Now'}</Text>
-//                       <Feather name="arrow-right" size={14} color={colors.onBrand} />
-//                     </View>
-//                   </View>
-//                 </Pressable>
-//               )}
-//             />
-//           </View>
-//         )}
-
-//         {/* Categories */}
-//         <View style={{ marginTop: spacing.xl }}>
-//           <SectionHeader title="Shop by Category" actionLabel="See all" onAction={() => router.push('/(tabs)/categories')} />
-//           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hpad}>
-//             {(categories.data || []).map((c) => (
-//               <Pressable key={c.id} style={styles.catItem} onPress={() => router.push(`/(tabs)/shop?category=${c.slug}`)} testID={`category-${c.slug}`}>
-//                 <View style={styles.catImgWrap}>
-//                   <Image source={{ uri: c.image }} style={styles.catImg} contentFit="cover" transition={200} />
-//                 </View>
-//                 <Text style={styles.catName} numberOfLines={2}>{c.name}</Text>
-//               </Pressable>
-//             ))}
-//           </ScrollView>
-//         </View>
-
-//         {/* Best Sellers */}
-//         <View style={{ marginTop: spacing.xl }}>
-//           <SectionHeader title="Best Sellers" actionLabel="See all" onAction={() => router.push('/(tabs)/shop')} />
-//           {loading ? (
-//             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hpad}>
-//               {[0, 1, 2].map((i) => (
-//                 <View key={i} style={{ marginRight: spacing.md }}>
-//                   <ProductCardSkeleton width={CARD_W} />
-//                 </View>
-//               ))}
-//             </ScrollView>
-//           ) : (
-//             <FlatList
-//               horizontal
-//               showsHorizontalScrollIndicator={false}
-//               data={best.data?.products || []}
-//               keyExtractor={(p) => p.id}
-//               contentContainerStyle={styles.hpad}
-//               renderItem={({ item }) => (
-//                 <View style={{ marginRight: spacing.md }}>
-//                   <ProductCard product={item} width={CARD_W} />
-//                 </View>
-//               )}
-//             />
-//           )}
-//         </View>
-
-//         {/* Shop by Need */}
-//         <View style={{ marginTop: spacing.xl }}>
-//           <SectionHeader title="Shop by Need" />
-//           <View style={styles.needsGrid}>
-//             {NEEDS.map((n) => (
-//               <Pressable key={n.key} style={styles.needCard} onPress={() => router.push(`/(tabs)/shop?need=${n.key}`)} testID={`need-${n.key}`}>
-//                 <View style={styles.needIcon}>
-//                   <Feather name={n.icon as any} size={20} color={colors.brand} />
-//                 </View>
-//                 <Text style={styles.needLabel}>{n.label}</Text>
-//               </Pressable>
-//             ))}
-//           </View>
-//         </View>
-
-//         {/* New Arrivals */}
-//         {(fresh.data?.products?.length || 0) > 0 && (
-//           <View style={{ marginTop: spacing.xl }}>
-//             <SectionHeader title="New Arrivals" actionLabel="See all" onAction={() => router.push('/(tabs)/shop')} />
-//             <FlatList
-//               horizontal
-//               showsHorizontalScrollIndicator={false}
-//               data={fresh.data?.products || []}
-//               keyExtractor={(p) => p.id}
-//               contentContainerStyle={styles.hpad}
-//               renderItem={({ item }) => (
-//                 <View style={{ marginRight: spacing.md }}>
-//                   <ProductCard product={item} width={CARD_W} />
-//                 </View>
-//               )}
-//             />
-//           </View>
-//         )}
-
-//         {/* Promo */}
-//         <Pressable style={styles.promo} onPress={() => router.push('/(tabs)/shop')}>
-//           <View style={{ flex: 1 }}>
-//             <Text style={styles.promoTitle}>Buy More, Save More</Text>
-//             <Text style={styles.promoSub}>Free shipping on all orders above ₹999</Text>
-//           </View>
-//           <Feather name="gift" size={30} color={colors.onBrand} />
-//         </Pressable>
-
-//         {/* What makes Sunsu different */}
-//         <View style={{ marginTop: spacing.xl }}>
-//           <SectionHeader title="What Makes SUNSU Different?" />
-//           <View style={styles.trustGrid}>
-//             {TRUST.map((t) => (
-//               <View key={t.label} style={styles.trustCard}>
-//                 <View style={styles.trustIcon}>
-//                   <Feather name={t.icon as any} size={18} color={colors.brand} />
-//                 </View>
-//                 <Text style={styles.trustLabel}>{t.label}</Text>
-//               </View>
-//             ))}
-//           </View>
-//         </View>
-
-//         {/* Reviews */}
-//         <View style={[styles.reviewCard]}>
-//           <View style={styles.reviewStars}>
-//             {[1, 2, 3, 4, 5].map((i) => (
-//               <Feather key={i} name="star" size={16} color={colors.star} />
-//             ))}
-//           </View>
-//           <Text style={styles.reviewQuote}>“Genuinely the easiest way I’ve found to add real fruit to my mornings. The Mango Energy Mix is a family favourite!”</Text>
-//           <Text style={styles.reviewName}>— Priya S., Bengaluru</Text>
-//           <Text style={styles.reviewMeta}>Trusted by 5,000+ happy customers across India</Text>
-//         </View>
-
-//         {/* Footer */}
-//         <View style={styles.footer}>
-//           <SunLogo size={18} />
-//           <Text style={styles.footerTag}>Nature, Dehydrated. Goodness, Preserved.</Text>
-//           <View style={styles.footerLinks}>
-//             {FOOTER_LINKS.map((l) => (
-//               <Pressable key={l} onPress={() => router.push('/support')}>
-//                 <Text style={styles.footerLink}>{l}</Text>
-//               </Pressable>
-//             ))}
-//           </View>
-//           <Text style={styles.footerCopy}>© 2026 SUNSU • Made in India</Text>
-//         </View>
-//       </ScrollView>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   wrap: { flex: 1, backgroundColor: colors.surface },
-//   header: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     paddingHorizontal: spacing.lg,
-//     paddingBottom: spacing.sm,
-//     gap: spacing.sm,
-//     backgroundColor: colors.surface,
-//   },
-//   location: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4, justifyContent: 'center' },
-//   locText: { fontFamily: font.semibold, fontSize: fontSize.sm, color: colors.onSurface, maxWidth: 150 },
-//   headerIcons: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-//   search: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     gap: spacing.sm,
-//     marginHorizontal: spacing.lg,
-//     marginTop: spacing.sm,
-//     marginBottom: spacing.md,
-//     backgroundColor: colors.card,
-//     borderRadius: radius.md,
-//     borderWidth: 1,
-//     borderColor: colors.border,
-//     paddingHorizontal: spacing.md,
-//     height: 48,
-//   },
-//   searchText: { fontFamily: font.regular, fontSize: fontSize.base, color: colors.muted },
-//   heroWrap: { paddingHorizontal: spacing.lg, height: 190 },
-//   hero: { flex: 1, borderRadius: radius.lg, overflow: 'hidden', justifyContent: 'flex-end' },
-//   heroText: { padding: spacing.lg },
-//   heroTitle: { fontFamily: font.extrabold, fontSize: fontSize['2xl'], color: colors.onInverse, lineHeight: 28 },
-//   heroSub: { fontFamily: font.regular, fontSize: fontSize.base, color: 'rgba(247,245,240,0.9)', marginTop: 4 },
-//   heroCta: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.brand, alignSelf: 'flex-start', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.sm, marginTop: spacing.md },
-//   heroCtaText: { fontFamily: font.bold, fontSize: fontSize.sm, color: colors.onBrand },
-//   hpad: { paddingHorizontal: spacing.lg },
-//   catItem: { width: 84, marginRight: spacing.md, alignItems: 'center' },
-//   catImgWrap: { width: 76, height: 76, borderRadius: radius.md, overflow: 'hidden', backgroundColor: colors.surfaceTertiary, borderWidth: 1, borderColor: colors.border },
-//   catImg: { width: '100%', height: '100%' },
-//   catName: { fontFamily: font.semibold, fontSize: fontSize.xs, color: colors.onSurface, textAlign: 'center', marginTop: spacing.sm },
-//   needsGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: spacing.lg, gap: spacing.md },
-//   needCard: { width: (width - spacing.lg * 2 - spacing.md * 2) / 3, backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, alignItems: 'center', paddingVertical: spacing.md, gap: spacing.sm },
-//   needIcon: { width: 42, height: 42, borderRadius: 21, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
-//   needLabel: { fontFamily: font.semibold, fontSize: fontSize.xs, color: colors.onSurface, textAlign: 'center' },
-//   promo: { flexDirection: 'row', alignItems: 'center', marginHorizontal: spacing.lg, marginTop: spacing.xl, backgroundColor: colors.brandDark, borderRadius: radius.lg, padding: spacing.lg, gap: spacing.md },
-//   promoTitle: { fontFamily: font.extrabold, fontSize: fontSize.xl, color: colors.onBrand },
-//   promoSub: { fontFamily: font.regular, fontSize: fontSize.base, color: 'rgba(255,255,255,0.85)', marginTop: 2 },
-//   trustGrid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: spacing.lg, gap: spacing.md },
-//   trustCard: { width: (width - spacing.lg * 2 - spacing.md) / 2, flexDirection: 'row', alignItems: 'center', gap: spacing.md, backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: spacing.md },
-//   trustIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
-//   trustLabel: { fontFamily: font.semibold, fontSize: fontSize.sm, color: colors.onSurface, flex: 1 },
-//   reviewCard: { marginHorizontal: spacing.lg, marginTop: spacing.xl, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.xl, ...shadow.soft },
-//   reviewStars: { flexDirection: 'row', gap: 3 },
-//   reviewQuote: { fontFamily: font.medium, fontSize: fontSize.lg, color: colors.onSurface, lineHeight: 24, marginTop: spacing.md },
-//   reviewName: { fontFamily: font.semibold, fontSize: fontSize.base, color: colors.brand, marginTop: spacing.md },
-//   reviewMeta: { fontFamily: font.regular, fontSize: fontSize.sm, color: colors.muted, marginTop: spacing.xs },
-//   footer: { marginTop: spacing.xxl, paddingHorizontal: spacing.lg, alignItems: 'center', gap: spacing.md },
-//   footerTag: { fontFamily: font.medium, fontSize: fontSize.sm, color: colors.muted },
-//   footerLinks: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: spacing.lg, rowGap: spacing.md },
-//   footerLink: { fontFamily: font.regular, fontSize: fontSize.sm, color: colors.onSurfaceMuted },
-//   footerCopy: { fontFamily: font.regular, fontSize: fontSize.xs, color: colors.muted, marginTop: spacing.sm },
-// });
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, RefreshControl, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Carousel } from 'react-native-reanimated-carousel';
+import { Carousel, type ICarouselInstance } from 'react-native-reanimated-carousel';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -326,38 +10,95 @@ import { colors, font, fontSize, radius, spacing } from '@/src/theme';
 import { useFetch } from '@/src/hooks/useFetch';
 import { useAuth } from '@/src/context/AuthContext';
 import { useLocation } from '@/src/context/LocationContext';
-import { Banner, Category, Product } from '@/src/types';
+import { Category, Product } from '@/src/types';
 import { SectionHeader } from '@/src/components/SectionHeader';
 import HomePageShop from './homePageShope';
 import Footer from './footer';
 
+// Web / Desktop images (1 - 7)
+import Image1 from "../../assets/images/new-1.png";
+import Image2 from "../../assets/images/new-2.png";
+import Image3 from "../../assets/images/new-3.png";
+import Image4 from "../../assets/images/new-4.png";
+import Image5 from "../../assets/images/new-5.png";
+import Image6 from "../../assets/images/new-6.png";
+import Image7 from "../../assets/images/new-7.png";
+
+// Mobile images (8 - 14)
+import Image8 from "../../assets/images/m-all.png";
+import Image9 from "../../assets/images/dig.png";
+import Image10 from "../../assets/images/choc.png";
+import Image11 from "../../assets/images/mng.png";
+import Image12 from "../../assets/images/nan.png";
+import Image13 from "../../assets/images/tropical.png";
+import Image14 from "../../assets/images/bery.png";
+
 const HORIZONTAL_PADDING = spacing.lg;
 const CARD_GAP = spacing.md;
+const FEATURED_CARD_WIDTH = 260;
+
+// Web hero banners
+const WEB_BANNERS = [
+  { id: '1', image: Image1 },
+  { id: '2', image: Image2 },
+  { id: '3', image: Image3 },
+  { id: '4', image: Image4 },
+  { id: '5', image: Image5 },
+  { id: '6', image: Image6 },
+  { id: '7', image: Image7 },
+];
+
+// Mobile hero banners
+const MOBILE_BANNERS = [
+  { id: '1', image: Image8 },
+  { id: '2', image: Image9 },
+  { id: '3', image: Image10 },
+  { id: '4', image: Image11 },
+  { id: '5', image: Image12 },
+  { id: '6', image: Image13 },
+  { id: '7', image: Image14 },
+];
 
 export default function Home() {
   const { width } = useWindowDimensions();
-  const isMobile = width < 768; // Mobile breakout threshold
+  const isMobile = width < 768;
 
-  // Web Grid Dynamic Width
+  // Use tall portrait height on mobile (similar to 4:5 e-commerce banners in Image 1)
+  const heroHeight = isMobile ? Math.round(width * 1.25) : 580;
   const webCardWidth = (width - HORIZONTAL_PADDING * 2 - CARD_GAP) / 2;
+
+  // Select banner images according to device
+  const heroBanners = isMobile ? MOBILE_BANNERS : WEB_BANNERS;
 
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { user } = useAuth();
   const { location } = useLocation();
 
-  const banners = useFetch<Banner[]>('/banners');
+  // Carousel refs and state
+  const heroCarouselRef = useRef<ICarouselInstance>(null);
+  const [activeHeroIndex, setActiveHeroIndex] = useState(0);
+
+  // Auto-Slide Loop Effect
+  useEffect(() => {
+    const heroTimer = setInterval(() => {
+      heroCarouselRef.current?.next();
+    }, 6000);
+
+    return () => {
+      clearInterval(heroTimer);
+    };
+  }, []);
+
   const categories = useFetch<Category[]>('/categories');
   const best = useFetch<{ products: Product[] }>('/products?best_seller=true&limit=8');
   const fresh = useFetch<{ products: Product[] }>('/products?is_new=true&limit=8');
 
   const onRefresh = useCallback(() => {
-    banners.reload();
     categories.reload();
     best.reload();
     fresh.reload();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [categories, best, fresh]);
 
   const filteredCategories = (categories.data || []).filter((c) => {
     const name = c.name.toLowerCase();
@@ -377,44 +118,65 @@ export default function Home() {
         contentContainerStyle={{ paddingBottom: spacing.xxxl }}
         refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={colors.brand} />}
       >
-        {/* Hero Carousel */}
-        {banners.data && banners.data.length > 0 && (
-          <View style={styles.heroWrap}>
-            <Carousel
-              width={width - HORIZONTAL_PADDING * 2}
-              height={180}
-              autoPlay
-              autoPlayInterval={3800}
-              loop
-              data={banners.data}
-              scrollAnimationDuration={700}
-              style={{ width: width - HORIZONTAL_PADDING * 2, height: 180, borderRadius: radius.lg }}
-              renderItem={({ item }) => (
-                <Pressable
-                  style={styles.hero}
-                  onPress={() => router.push('/(tabs)/shop')}
-                  testID="hero-banner"
-                >
-                  <Image source={{ uri: item.image }} style={StyleSheet.absoluteFill as any} contentFit="cover" transition={250} />
-                  <LinearGradient colors={['rgba(23,32,23,0.15)', 'rgba(23,32,23,0.75)']} style={StyleSheet.absoluteFill as any} />
-                  <View style={styles.heroText}>
-                    <Text style={styles.heroTitle}>{item.title}</Text>
-                    {!!item.subtitle && <Text style={styles.heroSub} numberOfLines={2}>{item.subtitle}</Text>}
-                    <View style={styles.heroCta}>
-                      <Text style={styles.heroCtaText}>{item.cta_text || 'Shop Now'}</Text>
-                      <Feather name="arrow-right" size={14} color={colors.onBrand} />
-                    </View>
-                  </View>
-                </Pressable>
-              )}
-            />
+        {/* Full-Width Automatic Hero Slideshow */}
+        <View style={[styles.heroWrap, { height: heroHeight }]}>
+          <Carousel
+            ref={heroCarouselRef}
+            width={width}
+            height={heroHeight}
+            loop={true}
+            enabled={true}
+            pagingEnabled={true}
+            snapEnabled={true}
+            scrollAnimationDuration={650}
+            data={heroBanners}
+            onSnapToItem={(index) => setActiveHeroIndex(index)}
+            style={{ width: width, height: heroHeight }}
+            panGestureHandlerProps={{ activeOffsetX: [-10, 10] }}
+            renderItem={({ item }) => (
+              <Pressable
+                style={styles.hero}
+                onPress={() => router.push('/(tabs)/shop')}
+                testID="hero-banner"
+              >
+                {/* Edge-to-edge uncropped banner image */}
+                <Image 
+                  source={item.image} 
+                  style={styles.heroImage} 
+                  contentFit="cover" 
+                  transition={250} 
+                />
+              </Pressable>
+            )}
+          />
+
+          {/* Dots Indicator */}
+          <View style={styles.dotsContainer}>
+            {heroBanners.map((_, idx) => (
+              <Pressable
+                key={idx}
+                onPress={() => heroCarouselRef.current?.scrollTo({ index: idx, animated: true })}
+                style={[
+                  styles.dot,
+                  activeHeroIndex === idx && styles.activeDot,
+                ]}
+              />
+            ))}
           </View>
-        )}
+        </View>
 
         {/* Responsive Shop by Category */}
         <View style={{ marginTop: spacing.xl }}>
-          <SectionHeader title="Shop by Category" actionLabel="See all" onAction={() => router.push('/(tabs)/categories')} />
-          <View style={[styles.categoryContainer, !isMobile && styles.webCategoryGrid]}>
+          <SectionHeader 
+            title="Shop by Category" 
+            actionLabel="See all" 
+            onAction={() => router.push('/(tabs)/categories')} 
+          />
+          <View style={[
+            styles.categoryContainer, 
+            isMobile && { paddingHorizontal: spacing.md },
+            !isMobile && styles.webCategoryGrid
+          ]}>
             {filteredCategories.map((c) => (
               <Pressable
                 key={c.id}
@@ -425,10 +187,15 @@ export default function Home() {
                 onPress={() => router.push(`/(tabs)/shop?category=${c.slug}`)}
                 testID={`category-${c.slug}`}
               >
-                <Image source={{ uri: c.image }} style={StyleSheet.absoluteFill as any} contentFit="cover" transition={200} />
+                <Image 
+                  source={{ uri: c.image }} 
+                  style={StyleSheet.absoluteFillObject} 
+                  contentFit="cover" 
+                  transition={200} 
+                />
                 <LinearGradient
                   colors={isMobile ? ['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.7)'] : ['rgba(0,0,0,0.05)', 'rgba(0,0,0,0.65)']}
-                  style={StyleSheet.absoluteFill as any}
+                  style={StyleSheet.absoluteFillObject}
                 />
                 
                 <View style={isMobile ? styles.mobileContent : styles.webContent}>
@@ -437,15 +204,13 @@ export default function Home() {
                   </Text>
                   
                   {isMobile ? (
-                    /* Mobile CTA: Row with green arrow badge */
                     <View style={styles.mobileCta}>
                       <Text style={styles.mobileCtaText}>Shop now</Text>
                       <View style={styles.greenArrowCircle}>
-                        <Feather name="arrow-right" size={12} color="#FFFFFF" />
+                        <Feather name="arrow-right" size={10} color="#FFFFFF" />
                       </View>
                     </View>
                   ) : (
-                    /* Web CTA: Inline text with plain arrow */
                     <View style={styles.webCta}>
                       <Text style={styles.webCtaText}>Shop Now</Text>
                       <Feather name="arrow-right" size={12} color="#FFFFFF" />
@@ -468,16 +233,52 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  wrap: { flex: 1, backgroundColor: colors.surface, paddingTop: spacing.md },
-  heroWrap: { paddingHorizontal: HORIZONTAL_PADDING, height: 180 },
-  hero: { flex: 1, borderRadius: radius.lg, overflow: 'hidden', justifyContent: 'flex-end' },
-  heroText: { padding: spacing.md },
-  heroTitle: { fontFamily: font.extrabold, fontSize: fontSize.xl, color: colors.onInverse, lineHeight: 24 },
-  heroSub: { fontFamily: font.regular, fontSize: fontSize.sm, color: 'rgba(247,245,240,0.9)', marginTop: 2 },
-  heroCta: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: colors.brand, alignSelf: 'flex-start', paddingHorizontal: spacing.md, paddingVertical: 6, borderRadius: radius.sm, marginTop: spacing.sm },
-  heroCtaText: { fontFamily: font.bold, fontSize: fontSize.xs, color: colors.onBrand },
+  wrap: { 
+    flex: 1, 
+    backgroundColor: colors.surface, 
+    paddingTop: spacing.xs,
+  },
+  heroWrap: { 
+    width: '100%', 
+    position: 'relative',
+    backgroundColor: '#FAF5EE',
+  },
+  hero: { 
+    flex: 1, 
+    width: '100%',
+    height: '100%',
+    overflow: 'hidden', 
+  },
+  heroImage: { 
+    width: '100%', 
+    height: '100%',
+  },
 
-  // Base Layout Containers
+  // Bottom Dots Indicator (like in Image 1)
+  dotsContainer: {
+    position: 'absolute',
+    bottom: 12,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 6,
+    zIndex: 10,
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.55)',
+  },
+  activeDot: {
+    width: 22,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
+  },
+
+  // Category Layout
   categoryContainer: {
     paddingHorizontal: HORIZONTAL_PADDING,
     marginTop: spacing.sm,
@@ -486,50 +287,50 @@ const styles = StyleSheet.create({
   webCategoryGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    backgroundColor: "#F8F9FA",
+    backgroundColor: '#F8F9FA',
     padding: 16,
-   
   },
 
-  // Mobile Styles (Full-width vertical stack)
+  // Mobile Category Styles
   mobileBannerCard: {
     width: '100%',
-    height: 140,
-    borderRadius: 20,
+    height: 125,
+    borderRadius: radius.lg,
     overflow: 'hidden',
     justifyContent: 'center',
     backgroundColor: colors.surfaceTertiary,
   },
   mobileContent: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    zIndex: 2,
   },
   mobileTitle: {
     fontFamily: font.extrabold,
-    fontSize: fontSize.xl,
+    fontSize: 14,
     color: '#FFFFFF',
-    marginBottom: spacing.xs,
+    marginBottom: 4,
   },
   mobileCta: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
   mobileCtaText: {
     fontFamily: font.bold,
-    fontSize: fontSize.sm,
+    fontSize: 11,
     color: '#FFFFFF',
   },
   greenArrowCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     backgroundColor: '#059669',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  // Web Styles (2-column side-by-side banner tiles)
+  // Web Category Styles
   webBannerCard: {
     height: 280,
     borderRadius: radius.lg,
@@ -539,6 +340,7 @@ const styles = StyleSheet.create({
   },
   webContent: {
     padding: spacing.md,
+    zIndex: 2,
   },
   webTitle: {
     fontFamily: font.extrabold,

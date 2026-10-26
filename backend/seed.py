@@ -1,3 +1,217 @@
+# """Idempotent seed data for SUNSU. Runs on startup."""
+# import os
+
+# from db import db
+# from models import iso_now
+# from auth_utils import hash_password
+
+# IMG = "?auto=compress&cs=tinysrgb&w=1000"
+# P = "https://images.pexels.com/photos"
+
+# CATEGORIES = [
+#     {"slug": "fruit-powders", "name": "Fruit Powders", "image": f"{P}/1092730/pexels-photo-1092730.jpeg{IMG}", "accent": "#E65100", "sort_order": 1},
+#     {"slug": "vegetable-powders", "name": "Vegetable Powders", "image": f"{P}/6833682/pexels-photo-6833682.jpeg{IMG}", "accent": "#15803D", "sort_order": 2},
+#     {"slug": "wellness-blends", "name": "Wellness Blends", "image": f"{P}/1640777/pexels-photo-1640777.jpeg{IMG}", "accent": "#B45309", "sort_order": 3},
+#     {"slug": "energy-mixes", "name": "Energy Mixes", "image": f"{P}/1153369/pexels-photo-1153369.jpeg{IMG}", "accent": "#C2410C", "sort_order": 4},
+#     {"slug": "immunity", "name": "Immunity", "image": f"{P}/36326589/pexels-photo-36326589.jpeg{IMG}", "accent": "#CA8A04", "sort_order": 5},
+# ]
+
+# BANNERS = [
+#     {"title": "Goodness, Preserved.", "subtitle": "Real fruit, carefully dehydrated into everyday nutrition.", "cta_text": "Shop Now", "cta_target": "shop", "image": f"{P}/5208223/pexels-photo-5208223.jpeg{IMG}", "accent": "#15803D", "sort_order": 1, "is_active": True},
+#     {"title": "Nutrition Made Delicious.", "subtitle": "Fruit-forward blends for energy, immunity & glow.", "cta_text": "Explore Blends", "cta_target": "category/wellness-blends", "image": f"{P}/1793035/pexels-photo-1793035.jpeg{IMG}", "accent": "#E65100", "sort_order": 2, "is_active": True},
+#     {"title": "Your Daily Dose of Natural Goodness.", "subtitle": "Free shipping on orders above ₹999.", "cta_text": "Shop Best Sellers", "cta_target": "shop", "image": f"{P}/1099680/pexels-photo-1099680.jpeg{IMG}", "accent": "#B45309", "sort_order": 3, "is_active": True},
+# ]
+
+# OFFERS = [
+#     {"title": "10% OFF your first order", "subtitle": "Use code WELCOME10", "code": "WELCOME10", "sort_order": 1, "is_active": True},
+#     {"title": "Free shipping above ₹999", "subtitle": "Auto-applied at checkout", "code": None, "sort_order": 2, "is_active": True},
+#     {"title": "Flat 20% OFF above ₹799", "subtitle": "Use code SUNSU20", "code": "SUNSU20", "sort_order": 3, "is_active": True},
+# ]
+
+# COUPONS = [
+#     {"code": "WELCOME10", "description": "10% off your order (up to ₹100)", "discount_type": "percentage", "discount_value": 10, "min_order": 0, "max_discount": 100, "is_active": True, "used_count": 0},
+#     {"code": "FIRST50", "description": "Flat ₹50 off on orders above ₹499", "discount_type": "fixed", "discount_value": 50, "min_order": 499, "is_active": True, "used_count": 0},
+#     {"code": "SUNSU20", "description": "20% off on orders above ₹799 (up to ₹200)", "discount_type": "percentage", "discount_value": 20, "min_order": 799, "max_discount": 200, "is_active": True, "used_count": 0},
+# ]
+
+# SETTINGS = {
+#     "key": "app",
+#     "value": {
+#         "currency": "INR",
+#         "free_shipping_threshold": 999,
+#         "shipping_charge": 49,
+#         "support_email": "care@sunsu.in",
+#         "support_phone": "+91 90000 00000",
+#         "whatsapp": "+919000000000",
+#         "instagram": "https://instagram.com/sunsu",
+#         "trust_badges": [
+#             {"icon": "sun", "label": "Carefully Dehydrated"},
+#             {"icon": "check-circle", "label": "Quality Ingredients"},
+#             {"icon": "zap", "label": "Convenient Nutrition"},
+#             {"icon": "shield", "label": "Hygienically Packed"},
+#             {"icon": "heart", "label": "Everyday Wellness"},
+#         ],
+#     },
+# }
+
+
+# def _variants(base100, base250, base500, mrp_mult=1.18):
+#     return [
+#         {"id": "v100", "weight": "100g", "price": base100, "mrp": round(base100 * mrp_mult), "stock": 120},
+#         {"id": "v250", "weight": "250g", "price": base250, "mrp": round(base250 * mrp_mult), "stock": 80},
+#         {"id": "v500", "weight": "500g", "price": base500, "mrp": round(base500 * mrp_mult), "stock": 40},
+#     ]
+
+
+# def _nutrition(cal, protein, carbs, fiber, sugar):
+#     return [
+#         {"label": "Energy", "value": f"{cal} kcal"},
+#         {"label": "Protein", "value": f"{protein} g"},
+#         {"label": "Carbohydrates", "value": f"{carbs} g"},
+#         {"label": "Dietary Fiber", "value": f"{fiber} g"},
+#         {"label": "Total Sugars", "value": f"{sugar} g"},
+#     ]
+
+
+# HOW_TO_USE = [
+#     "Add 1-2 tsp to your morning smoothie",
+#     "Blend into milk or plant-based drinks",
+#     "Stir into water for a quick refreshment",
+#     "Sprinkle over breakfast bowls & yogurt",
+# ]
+
+
+# def _product(slug, name, tagline, short, desc, cat_slug, cat_name, needs, dietary, ingredients, images, variants, nutrition, benefits, rating, reviews, best=False, new=False, order=0, allergen="Made in a facility that also processes tree nuts.", faqs=None):
+#     return {
+#         "slug": slug, "name": name, "tagline": tagline, "short_description": short,
+#         "description": desc, "category_slug": cat_slug, "category_name": cat_name,
+#         "needs": needs, "dietary": dietary, "ingredients": ingredients,
+#         "ingredients_text": ", ".join(ingredients), "nutrition": nutrition, "benefits": benefits,
+#         "how_to_use": HOW_TO_USE, "storage": "Store in a cool, dry place away from direct sunlight. Reseal after use.",
+#         "shelf_life": "12 months from manufacture", "allergen_info": allergen,
+#         "faqs": faqs or [
+#             {"q": "Are there any added sugars or preservatives?", "a": "No. SUNSU powders are made only from real dehydrated ingredients with no added sugar, colours or preservatives."},
+#             {"q": "How is it made?", "a": "Fresh produce is gently dehydrated at low temperatures to preserve natural nutrients, then finely milled into powder."},
+#         ],
+#         "images": images, "variants": variants, "rating": rating, "review_count": reviews,
+#         "is_best_seller": best, "is_new": new, "is_active": True, "sort_order": order,
+#         "created_at": iso_now(),
+#     }
+
+
+# def build_products():
+#     pf = f"{P}"
+#     return [
+#         _product(
+#             "mango-energy-mix", "Mango Energy Mix", "Mango • Banana • Cocoa • Dates",
+#             "A tropical, energising fruit blend for busy days.",
+#             "SUNSU Mango Energy Mix combines sun-ripened mango, banana, rich cocoa and dates into a naturally sweet, energising powder. A convenient way to enjoy fruit-based nutrition any time of day.",
+#             "energy-mixes", "Energy Mixes", ["energy", "workout"], ["Vegan", "Gluten-Free"],
+#             ["Mango", "Banana", "Cocoa", "Dates"],
+#             [f"{pf}/1092730/pexels-photo-1092730.jpeg{IMG}", f"{pf}/5208223/pexels-photo-5208223.jpeg{IMG}", f"{pf}/1153369/pexels-photo-1153369.jpeg{IMG}"],
+#             _variants(299, 599, 999), _nutrition(372, 6.2, 78, 9, 42),
+#             ["Supports everyday energy", "Naturally sweet, no added sugar", "Rich in naturally occurring nutrients"],
+#             4.7, 214, best=True, order=1,
+#         ),
+#         _product(
+#             "tropical-pineapple-bliss", "Tropical Pineapple Bliss", "Pineapple • Coconut",
+#             "Sunny pineapple and creamy coconut in a glass.",
+#             "A bright, tropical duo of dehydrated pineapple and coconut. Tangy, refreshing and perfect for smoothies or a quick pick-me-up drink.",
+#             "fruit-powders", "Fruit Powders", ["daily-wellness", "skin-glow"], ["Vegan", "Gluten-Free"],
+#             ["Pineapple", "Coconut"],
+#             [f"{pf}/1793035/pexels-photo-1793035.jpeg{IMG}", f"{pf}/1128678/pexels-photo-1128678.jpeg{IMG}", f"{pf}/616833/pexels-photo-616833.jpeg{IMG}"],
+#             _variants(279, 549, 949), _nutrition(345, 3.1, 74, 8, 48),
+#             ["Refreshing tropical taste", "Contains naturally occurring nutrients", "Convenient fruit nutrition"],
+#             4.5, 156, best=True, new=True, order=2,
+#         ),
+#         _product(
+#             "natural-choco", "Natural Choco", "Banana • Dates • Cocoa • Coconut",
+#             "A guilt-free chocolatey treat, naturally.",
+#             "Naturally sweetened with banana and dates, blended with cocoa and coconut for a wholesome chocolate-style drink the whole family will love.",
+#             "energy-mixes", "Energy Mixes", ["energy", "daily-wellness"], ["Vegan", "Gluten-Free"],
+#             ["Banana", "Dates", "Cocoa", "Coconut"],
+#             [f"{pf}/1099680/pexels-photo-1099680.jpeg{IMG}", f"{pf}/2338407/pexels-photo-2338407.jpeg{IMG}", f"{pf}/1092730/pexels-photo-1092730.jpeg{IMG}"],
+#             _variants(329, 649, 1099), _nutrition(388, 5.5, 80, 10, 40),
+#             ["Naturally sweet chocolate taste", "No refined sugar", "Great for kids & adults"],
+#             4.8, 302, best=True, order=3,
+#         ),
+#         _product(
+#             "berry-wellness-blend", "Berry Wellness Blend", "Hibiscus • Strawberry • Coconu • Lemon",
+#             "A floral berry blend for daily glow.",
+#             "A delicate blend of hibiscus, strawberry, rose and lemon. Light, floral and refreshing — a beautiful everyday wellness ritual.",
+#             "wellness-blends", "Wellness Blends", ["immunity", "skin-glow"], ["Vegan", "Gluten-Free"],
+#             ["Hibiscus", "Strawberry", "Rose", "Lemon"],
+#             [f"{pf}/1640777/pexels-photo-1640777.jpeg{IMG}", f"{pf}/1435735/pexels-photo-1435735.jpeg{IMG}", f"{pf}/1300972/pexels-photo-1300972.jpeg{IMG}"],
+#             _variants(349, 699, 1199), _nutrition(310, 2.4, 68, 7, 36),
+#             ["Supports everyday wellness", "Naturally vibrant colour", "Light & refreshing"],
+#             4.6, 128, new=True, order=4,
+#         ),
+#         _product(
+#             "Nannari-Kush", "Nannari Kush", "Nannari root • Lemon • Coconut Water • Jaggery • Rose •  Cardamom ",
+#             "Pure beetroot for pre-workout & daily vigour.",
+#             "Single-origin beetroot, gently dehydrated and finely milled. An earthy, versatile powder loved before workouts and in everyday smoothies.",
+#             "vegetable-powders", "Vegetable Powders", ["energy", "workout", "immunity"], ["Vegan", "Gluten-Free", "Organic"],
+#             ["Beetroot"],
+#             [f"{pf}/6833682/pexels-photo-6833682.jpeg{IMG}", f"{pf}/4198015/pexels-photo-4198015.jpeg{IMG}", f"{pf}/3872373/pexels-photo-3872373.jpeg{IMG}"],
+#             _variants(259, 499, 849), _nutrition(330, 8.0, 66, 12, 44),
+#             ["Supports everyday stamina", "Single-ingredient purity", "Versatile in recipes"],
+#             4.4, 97, order=5,
+#         ),
+#         _product(
+#             "Digest-Mix", "Digest Mix", "Papaya • Ginger • Mint • Lemon",
+#             "Bright, tangy lemon in a spoon.",
+#             "Real dehydrated lemon milled into a fine, zesty powder. Add a burst of citrus to water, recipes and dressings instantly.",
+#             "immunity", "Immunity", ["immunity", "digestion"], ["Vegan", "Gluten-Free"],
+#             ["Lemon"],
+#             [f"{pf}/36326589/pexels-photo-36326589.jpeg{IMG}", f"{pf}/1128678/pexels-photo-1128678.jpeg{IMG}", f"{pf}/39060097/pexels-photo-39060097.jpeg{IMG}"],
+#             _variants(229, 449, 749), _nutrition(295, 3.8, 62, 11, 20),
+#             ["Bright citrus flavour", "Contains naturally occurring Vitamin C", "Convenient & long-lasting"],
+#             4.5, 141, order=6,
+#         ),
+      
+#     ]
+
+
+# async def run_seed():
+#     # Settings, coupons, banners, offers — upsert always
+#     await db.settings.update_one({"key": "app"}, {"$set": SETTINGS}, upsert=True)
+
+#     for c in COUPONS:
+#         await db.coupons.update_one({"code": c["code"]}, {"$setOnInsert": c}, upsert=True)
+
+#     if await db.categories.count_documents({}) == 0:
+#         for c in CATEGORIES:
+#             c["is_active"] = True
+#         await db.categories.insert_many(CATEGORIES)
+
+#     if await db.banners.count_documents({}) == 0:
+#         await db.banners.insert_many(BANNERS)
+
+#     if await db.offers.count_documents({}) == 0:
+#         await db.offers.insert_many(OFFERS)
+
+#     if await db.products.count_documents({}) == 0:
+#         await db.products.insert_many(build_products())
+
+#     # Admin user
+#     admin_email = os.environ.get("ADMIN_EMAIL")
+#     admin_password = os.environ.get("ADMIN_PASSWORD")
+#     if admin_email and admin_password:
+#         existing = await db.users.find_one({"email": admin_email, "is_admin": True})
+#         if not existing:
+#             await db.users.insert_one(
+#                 {
+#                     "email": admin_email,
+#                     "name": "SUNSU Admin",
+#                     "is_admin": True,
+#                     "is_active": True,
+#                     "password_hash": hash_password(admin_password),
+#                     "created_at": iso_now(),
+#                 }
+#             )
+
+
+
 """Idempotent seed data for SUNSU. Runs on startup."""
 import os
 
@@ -5,21 +219,21 @@ from db import db
 from models import iso_now
 from auth_utils import hash_password
 
-IMG = "?auto=compress&cs=tinysrgb&w=1000"
-P = "https://images.pexels.com/photos"
+# Base URL or static route where your frontend assets are hosted/served from the backend
+P = "https://sunsuofficial.com/assets/images"
 
 CATEGORIES = [
-    {"slug": "fruit-powders", "name": "Fruit Powders", "image": f"{P}/1092730/pexels-photo-1092730.jpeg{IMG}", "accent": "#E65100", "sort_order": 1},
-    {"slug": "vegetable-powders", "name": "Vegetable Powders", "image": f"{P}/6833682/pexels-photo-6833682.jpeg{IMG}", "accent": "#15803D", "sort_order": 2},
-    {"slug": "wellness-blends", "name": "Wellness Blends", "image": f"{P}/1640777/pexels-photo-1640777.jpeg{IMG}", "accent": "#B45309", "sort_order": 3},
-    {"slug": "energy-mixes", "name": "Energy Mixes", "image": f"{P}/1153369/pexels-photo-1153369.jpeg{IMG}", "accent": "#C2410C", "sort_order": 4},
-    {"slug": "immunity", "name": "Immunity", "image": f"{P}/36326589/pexels-photo-36326589.jpeg{IMG}", "accent": "#CA8A04", "sort_order": 5},
+    {"slug": "fruit-powders", "name": "Fruit Powders", "image": f"{P}/mng.png", "accent": "#E65100", "sort_order": 1},
+    {"slug": "vegetable-powders", "name": "Vegetable Powders", "image": f"{P}/nan.png", "accent": "#15803D", "sort_order": 2},
+    {"slug": "wellness-blends", "name": "Wellness Blends", "image": f"{P}/bery.png", "accent": "#B45309", "sort_order": 3},
+    {"slug": "energy-mixes", "name": "Energy Mixes", "image": f"{P}/choc.png", "accent": "#C2410C", "sort_order": 4},
+    {"slug": "immunity", "name": "Immunity", "image": f"{P}/dig.png", "accent": "#CA8A04", "sort_order": 5},
 ]
 
 BANNERS = [
-    {"title": "Goodness, Preserved.", "subtitle": "Real fruit, carefully dehydrated into everyday nutrition.", "cta_text": "Shop Now", "cta_target": "shop", "image": f"{P}/5208223/pexels-photo-5208223.jpeg{IMG}", "accent": "#15803D", "sort_order": 1, "is_active": True},
-    {"title": "Nutrition Made Delicious.", "subtitle": "Fruit-forward blends for energy, immunity & glow.", "cta_text": "Explore Blends", "cta_target": "category/wellness-blends", "image": f"{P}/1793035/pexels-photo-1793035.jpeg{IMG}", "accent": "#E65100", "sort_order": 2, "is_active": True},
-    {"title": "Your Daily Dose of Natural Goodness.", "subtitle": "Free shipping on orders above ₹999.", "cta_text": "Shop Best Sellers", "cta_target": "shop", "image": f"{P}/1099680/pexels-photo-1099680.jpeg{IMG}", "accent": "#B45309", "sort_order": 3, "is_active": True},
+    {"title": "Goodness, Preserved.", "subtitle": "Real fruit, carefully dehydrated into everyday nutrition.", "cta_text": "Shop Now", "cta_target": "shop", "image": f"{P}/new-1.png", "accent": "#15803D", "sort_order": 1, "is_active": True},
+    {"title": "Nutrition Made Delicious.", "subtitle": "Fruit-forward blends for energy, immunity & glow.", "cta_text": "Explore Blends", "cta_target": "category/wellness-blends", "image": f"{P}/new-2.png", "accent": "#E65100", "sort_order": 2, "is_active": True},
+    {"title": "Your Daily Dose of Natural Goodness.", "subtitle": "Free shipping on orders above ₹999.", "cta_text": "Shop Best Sellers", "cta_target": "shop", "image": f"{P}/logo.png", "accent": "#B45309", "sort_order": 3, "is_active": True},
 ]
 
 OFFERS = [
@@ -100,7 +314,6 @@ def _product(slug, name, tagline, short, desc, cat_slug, cat_name, needs, dietar
 
 
 def build_products():
-    pf = f"{P}"
     return [
         _product(
             "mango-energy-mix", "Mango Energy Mix", "Mango • Banana • Cocoa • Dates",
@@ -108,7 +321,7 @@ def build_products():
             "SUNSU Mango Energy Mix combines sun-ripened mango, banana, rich cocoa and dates into a naturally sweet, energising powder. A convenient way to enjoy fruit-based nutrition any time of day.",
             "energy-mixes", "Energy Mixes", ["energy", "workout"], ["Vegan", "Gluten-Free"],
             ["Mango", "Banana", "Cocoa", "Dates"],
-            [f"{pf}/1092730/pexels-photo-1092730.jpeg{IMG}", f"{pf}/5208223/pexels-photo-5208223.jpeg{IMG}", f"{pf}/1153369/pexels-photo-1153369.jpeg{IMG}"],
+            [f"{P}/mng.png", f"{P}/new-1.png", f"{P}/logo.png"],
             _variants(299, 599, 999), _nutrition(372, 6.2, 78, 9, 42),
             ["Supports everyday energy", "Naturally sweet, no added sugar", "Rich in naturally occurring nutrients"],
             4.7, 214, best=True, order=1,
@@ -119,7 +332,7 @@ def build_products():
             "A bright, tropical duo of dehydrated pineapple and coconut. Tangy, refreshing and perfect for smoothies or a quick pick-me-up drink.",
             "fruit-powders", "Fruit Powders", ["daily-wellness", "skin-glow"], ["Vegan", "Gluten-Free"],
             ["Pineapple", "Coconut"],
-            [f"{pf}/1793035/pexels-photo-1793035.jpeg{IMG}", f"{pf}/1128678/pexels-photo-1128678.jpeg{IMG}", f"{pf}/616833/pexels-photo-616833.jpeg{IMG}"],
+            [f"{P}/m-all.png", f"{P}/logo.png"],
             _variants(279, 549, 949), _nutrition(345, 3.1, 74, 8, 48),
             ["Refreshing tropical taste", "Contains naturally occurring nutrients", "Convenient fruit nutrition"],
             4.5, 156, best=True, new=True, order=2,
@@ -130,71 +343,48 @@ def build_products():
             "Naturally sweetened with banana and dates, blended with cocoa and coconut for a wholesome chocolate-style drink the whole family will love.",
             "energy-mixes", "Energy Mixes", ["energy", "daily-wellness"], ["Vegan", "Gluten-Free"],
             ["Banana", "Dates", "Cocoa", "Coconut"],
-            [f"{pf}/1099680/pexels-photo-1099680.jpeg{IMG}", f"{pf}/2338407/pexels-photo-2338407.jpeg{IMG}", f"{pf}/1092730/pexels-photo-1092730.jpeg{IMG}"],
+            [f"{P}/choc.png", f"{P}/logo.png"],
             _variants(329, 649, 1099), _nutrition(388, 5.5, 80, 10, 40),
             ["Naturally sweet chocolate taste", "No refined sugar", "Great for kids & adults"],
             4.8, 302, best=True, order=3,
         ),
         _product(
-            "berry-wellness-blend", "Berry Wellness Blend", "Hibiscus • Strawberry • Rose • Lemon",
+            "berry-wellness-blend", "Berry Wellness Blend", "Hibiscus • Strawberry • Coconut • Lemon",
             "A floral berry blend for daily glow.",
             "A delicate blend of hibiscus, strawberry, rose and lemon. Light, floral and refreshing — a beautiful everyday wellness ritual.",
             "wellness-blends", "Wellness Blends", ["immunity", "skin-glow"], ["Vegan", "Gluten-Free"],
             ["Hibiscus", "Strawberry", "Rose", "Lemon"],
-            [f"{pf}/1640777/pexels-photo-1640777.jpeg{IMG}", f"{pf}/1435735/pexels-photo-1435735.jpeg{IMG}", f"{pf}/1300972/pexels-photo-1300972.jpeg{IMG}"],
+            [f"{P}/bery.png", f"{P}/new-2.png"],
             _variants(349, 699, 1199), _nutrition(310, 2.4, 68, 7, 36),
             ["Supports everyday wellness", "Naturally vibrant colour", "Light & refreshing"],
             4.6, 128, new=True, order=4,
         ),
         _product(
-            "organic-beetroot", "Organic Beetroot Powder", "100% Beetroot",
+            "Nannari-Kush", "Nannari Kush", "Nannari root • Lemon • Coconut Water • Jaggery • Rose • Cardamom",
             "Pure beetroot for pre-workout & daily vigour.",
             "Single-origin beetroot, gently dehydrated and finely milled. An earthy, versatile powder loved before workouts and in everyday smoothies.",
             "vegetable-powders", "Vegetable Powders", ["energy", "workout", "immunity"], ["Vegan", "Gluten-Free", "Organic"],
             ["Beetroot"],
-            [f"{pf}/6833682/pexels-photo-6833682.jpeg{IMG}", f"{pf}/4198015/pexels-photo-4198015.jpeg{IMG}", f"{pf}/3872373/pexels-photo-3872373.jpeg{IMG}"],
+            [f"{P}/nan.png", f"{P}/logo.png"],
             _variants(259, 499, 849), _nutrition(330, 8.0, 66, 12, 44),
             ["Supports everyday stamina", "Single-ingredient purity", "Versatile in recipes"],
             4.4, 97, order=5,
         ),
         _product(
-            "zesty-lemon", "Zesty Lemon Powder", "100% Lemon",
+            "Digest-Mix", "Digest Mix", "Papaya • Ginger • Mint • Lemon",
             "Bright, tangy lemon in a spoon.",
             "Real dehydrated lemon milled into a fine, zesty powder. Add a burst of citrus to water, recipes and dressings instantly.",
             "immunity", "Immunity", ["immunity", "digestion"], ["Vegan", "Gluten-Free"],
             ["Lemon"],
-            [f"{pf}/36326589/pexels-photo-36326589.jpeg{IMG}", f"{pf}/1128678/pexels-photo-1128678.jpeg{IMG}", f"{pf}/39060097/pexels-photo-39060097.jpeg{IMG}"],
+            [f"{P}/dig.png", f"{P}/logo.png"],
             _variants(229, 449, 749), _nutrition(295, 3.8, 62, 11, 20),
             ["Bright citrus flavour", "Contains naturally occurring Vitamin C", "Convenient & long-lasting"],
             4.5, 141, order=6,
-        ),
-        _product(
-            "spinach-green-boost", "Spinach Green Boost", "Spinach • Moringa",
-            "Everyday greens, made effortless.",
-            "A wholesome blend of spinach and moringa for those who want their daily greens the easy way. Mild, earthy and smoothie-friendly.",
-            "vegetable-powders", "Vegetable Powders", ["daily-wellness", "immunity"], ["Vegan", "Gluten-Free"],
-            ["Spinach", "Moringa"],
-            [f"{pf}/6833682/pexels-photo-6833682.jpeg{IMG}", f"{pf}/3872373/pexels-photo-3872373.jpeg{IMG}", f"{pf}/4198015/pexels-photo-4198015.jpeg{IMG}"],
-            _variants(299, 579, 979), _nutrition(280, 9.2, 52, 14, 8),
-            ["Easy daily greens", "Contains naturally occurring nutrients", "Blends smoothly"],
-            4.3, 76, new=True, order=7,
-        ),
-        _product(
-            "amla-immunity", "Amla Immunity Blend", "Amla • Ginger • Turmeric",
-            "A warming trio for everyday immunity.",
-            "Traditional amla combined with ginger and turmeric in a warming, tangy blend crafted to support your everyday wellness routine.",
-            "immunity", "Immunity", ["immunity", "digestion", "daily-wellness"], ["Vegan", "Gluten-Free"],
-            ["Amla", "Ginger", "Turmeric"],
-            [f"{pf}/1300972/pexels-photo-1300972.jpeg{IMG}", f"{pf}/1640777/pexels-photo-1640777.jpeg{IMG}", f"{pf}/36326589/pexels-photo-36326589.jpeg{IMG}"],
-            _variants(319, 629, 1049), _nutrition(305, 4.5, 60, 13, 18),
-            ["Supports everyday immunity", "Warming, traditional flavour", "No added sugar"],
-            4.7, 189, best=True, order=8,
         ),
     ]
 
 
 async def run_seed():
-    # Settings, coupons, banners, offers — upsert always
     await db.settings.update_one({"key": "app"}, {"$set": SETTINGS}, upsert=True)
 
     for c in COUPONS:
@@ -214,7 +404,6 @@ async def run_seed():
     if await db.products.count_documents({}) == 0:
         await db.products.insert_many(build_products())
 
-    # Admin user
     admin_email = os.environ.get("ADMIN_EMAIL")
     admin_password = os.environ.get("ADMIN_PASSWORD")
     if admin_email and admin_password:
