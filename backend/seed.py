@@ -136,7 +136,7 @@ def build_products():
             "Naturally sweetened with banana and dates, blended with cocoa and coconut for a wholesome chocolate-style drink the whole family will love.",
             "energy-mixes", "Energy Mixes", ["energy", "daily-wellness"], ["Vegan", "Gluten-Free"],
             ["Banana", "Dates", "Cocoa", "Coconut"],
-            [f"{P}/choco/choco-11.png", f"{P}/choco/choco-12.png",f"{P}/choco/choco-13.png",f"{P}/all/all-12.png"],
+            [f"{P}/choco/choco-12.png", f"{P}/choco/choco-11.png",f"{P}/choco/choco-13.png",f"{P}/all/all-12.png"],
             _variants(329, 649, 1099), _nutrition(388, 5.5, 80, 10, 40),
             ["Naturally sweet chocolate taste", "No refined sugar", "Great for kids & adults"],
             4.8, 302, best=True, order=3,
