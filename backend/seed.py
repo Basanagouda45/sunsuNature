@@ -9,7 +9,11 @@ from models import iso_now
 from auth_utils import hash_password
 
 # Base URL or static route where your frontend assets are hosted/served from the backend
-P = "https://sunsuofficial.com/assets/images"
+# Change this:
+# P = "https://sunsuofficial.com/assets/images"
+
+# To this:
+P = "https://sunsunature-3.onrender.com/assets/images"
 
 CATEGORIES = [
     {"slug": "fruit-powders", "name": "Fruit Powders", "image": f"{P}/berry-14.png", "accent": "#E65100", "sort_order": 1},
