@@ -114,7 +114,7 @@ def build_products():
             "SUNSU Mango Energy Mix combines sun-ripened mango, banana, rich cocoa and dates into a naturally sweet, energising powder. A convenient way to enjoy fruit-based nutrition any time of day.",
             "energy-mixes", "Energy Mixes", ["energy", "workout"], ["Vegan", "Gluten-Free"],
             ["Mango", "Banana", "Cocoa", "Dates"],
-            [f"{P}/mango/box-12.png", f"{P}/mango/box-15.png", f"{P}/mango/box-16.png",f"{P}/all/box-13.png"],
+            [f"{P}/mango/box-12.png", f"{P}/mango/box-15.png", f"{P}/mango/box-16.png",f"{P}/all/box-13.png",f"{P}/all/all-12.png"],
             _variants(299, 599, 999), _nutrition(372, 6.2, 78, 9, 42),
             ["Supports everyday energy", "Naturally sweet, no added sugar", "Rich in naturally occurring nutrients"],
             4.7, 214, best=True, order=1,

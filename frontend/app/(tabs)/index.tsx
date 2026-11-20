@@ -1,19 +1,32 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, RefreshControl, useWindowDimensions } from 'react-native';
-import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Carousel, type ICarouselInstance } from 'react-native-reanimated-carousel';
-import { Feather } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { colors, font, fontSize, radius, spacing } from '@/src/theme';
-import { useFetch } from '@/src/hooks/useFetch';
-import { useAuth } from '@/src/context/AuthContext';
-import { useLocation } from '@/src/context/LocationContext';
-import { Category, Product } from '@/src/types';
-import { SectionHeader } from '@/src/components/SectionHeader';
-import HomePageShop from './homePageShope';
-import Footer from './footer';
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+  RefreshControl,
+  useWindowDimensions,
+} from "react-native";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+  Carousel,
+  type ICarouselInstance,
+} from "react-native-reanimated-carousel";
+import { Feather } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { colors, font, fontSize, radius, spacing } from "@/src/theme";
+import { useFetch } from "@/src/hooks/useFetch";
+import { useAuth } from "@/src/context/AuthContext";
+import { useLocation } from "@/src/context/LocationContext";
+import { Category, Product } from "@/src/types";
+import { SectionHeader } from "@/src/components/SectionHeader";
+import HomePageShop from "./homePageShope";
+import Footer from "./footer";
+import Overview from "../../assets/images/image_mobile.png";
+import Overview1 from "../../assets/images/image.png";
 
 // Web / Desktop images (1 - 7)
 import Image1 from "../../assets/images/new-1.png";
@@ -39,28 +52,30 @@ const FEATURED_CARD_WIDTH = 260;
 
 // Web hero banners
 const WEB_BANNERS = [
-  { id: '1', image: Image1 },
-  { id: '2', image: Image2 },
-  { id: '3', image: Image3 },
-  { id: '4', image: Image4 },
-  { id: '5', image: Image5 },
-  { id: '6', image: Image6 },
-  { id: '7', image: Image7 },
+  { id: "1", image: Image1 },
+  { id: "2", image: Image2 },
+  { id: "3", image: Image3 },
+  { id: "4", image: Image4 },
+  { id: "5", image: Image5 },
+  { id: "6", image: Image6 },
+  { id: "7", image: Image7 },
 ];
 
 // Mobile hero banners
 const MOBILE_BANNERS = [
-  { id: '1', image: Image8 },
-  { id: '2', image: Image9 },
-  { id: '3', image: Image10 },
-  { id: '4', image: Image11 },
-  { id: '5', image: Image12 },
-  { id: '6', image: Image13 },
-  { id: '7', image: Image14 },
+  { id: "1", image: Image8 },
+  { id: "2", image: Image9 },
+  { id: "3", image: Image10 },
+  { id: "4", image: Image11 },
+  { id: "5", image: Image12 },
+  { id: "6", image: Image13 },
+  { id: "7", image: Image14 },
 ];
 
 export default function Home() {
+  const [refreshing, setRefreshing] = useState(false);
   const { width } = useWindowDimensions();
+
   const isMobile = width < 768;
 
   // Use tall portrait height on mobile (similar to 4:5 e-commerce banners in Image 1)
@@ -90,24 +105,32 @@ export default function Home() {
     };
   }, []);
 
-  const categories = useFetch<Category[]>('/categories');
-  const best = useFetch<{ products: Product[] }>('/products?best_seller=true&limit=8');
-  const fresh = useFetch<{ products: Product[] }>('/products?is_new=true&limit=8');
+  const categories = useFetch<Category[]>("/categories");
+  const best = useFetch<{ products: Product[] }>(
+    "/products?best_seller=true&limit=8",
+  );
+  const fresh = useFetch<{ products: Product[] }>(
+    "/products?is_new=true&limit=8",
+  );
 
-  const onRefresh = useCallback(() => {
-    categories.reload();
-    best.reload();
-    fresh.reload();
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([categories.reload(), best.reload(), fresh.reload()]);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRefreshing(false); // Hides the spinner when done
+    }
   }, [categories, best, fresh]);
-
   const filteredCategories = (categories.data || []).filter((c) => {
     const name = c.name.toLowerCase();
     const slug = c.slug.toLowerCase();
     return (
-      !name.includes('immunity') &&
-      !slug.includes('immunity') &&
-      !name.includes('vegetable') &&
-      !slug.includes('vegetable')
+      !name.includes("immunity") &&
+      !slug.includes("immunity") &&
+      !name.includes("vegetable") &&
+      !slug.includes("vegetable")
     );
   });
 
@@ -116,7 +139,13 @@ export default function Home() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: spacing.xxxl }}
-        refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={colors.brand} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.brand}
+          />
+        }
       >
         {/* Full-Width Automatic Hero Slideshow */}
         <View style={[styles.heroWrap, { height: heroHeight }]}>
@@ -136,15 +165,16 @@ export default function Home() {
             renderItem={({ item }) => (
               <Pressable
                 style={styles.hero}
-                onPress={() => router.push('/(tabs)/shop')}
+                onPress={() => router.push("/(tabs)/shop")}
                 testID="hero-banner"
               >
                 {/* Edge-to-edge uncropped banner image */}
-                <Image 
-                  source={item.image} 
-                  style={styles.heroImage} 
-                  contentFit="cover" 
-                  transition={250} 
+                <Image
+                  source={item.image}
+                  style={styles.heroImage}
+                  contentFit="cover"
+                  transition={250}
+                  pointerEvents="none"
                 />
               </Pressable>
             )}
@@ -155,7 +185,12 @@ export default function Home() {
             {heroBanners.map((_, idx) => (
               <Pressable
                 key={idx}
-                onPress={() => heroCarouselRef.current?.scrollTo({ index: idx, animated: true })}
+                onPress={() =>
+                  heroCarouselRef.current?.scrollTo({
+                    index: idx,
+                    animated: true,
+                  })
+                }
                 style={[
                   styles.dot,
                   activeHeroIndex === idx && styles.activeDot,
@@ -164,45 +199,77 @@ export default function Home() {
             ))}
           </View>
         </View>
+        <View
+          style={{
+            width: "100%",
+            alignItems: "center",
+            height: 150,
+            marginTop: -20,
+          }}
+        >
+          <Image
+            source={isMobile ? Overview : Overview1}
+            style={{
+              width: "100%",
+              height: isMobile ? 180 : 260, // adjust height (e.g., 80 to 110) until it fits tightly
+              maxWidth: "90%",
+              marginTop:isMobile ? 10 : -20,
+            
+            }}
+            resizeMode="contain"
+          />
+        </View>
 
         {/* Responsive Shop by Category */}
-        <View style={{ marginTop: spacing.xl }}>
-          <SectionHeader 
-            title="Shop by Category" 
-            actionLabel="See all" 
-            onAction={() => router.push('/(tabs)/categories')} 
+        <View style={{ marginTop: spacing.sxl }}>
+          <SectionHeader
+            title="Shop by Category"
+            actionLabel="See all"
+            onAction={() => router.push("/(tabs)/categories")}
           />
-          <View style={[
-            styles.categoryContainer, 
-            isMobile && { paddingHorizontal: spacing.md },
-            !isMobile && styles.webCategoryGrid
-          ]}>
+
+          <View
+            style={[ 
+              styles.categoryContainer,
+              isMobile && { paddingHorizontal: spacing.md },
+              !isMobile && styles.webCategoryGrid,
+            ]}
+          >
             {filteredCategories.map((c) => (
               <Pressable
                 key={c.id}
                 style={[
                   isMobile ? styles.mobileBannerCard : styles.webBannerCard,
-                  !isMobile && { width: webCardWidth }
+                  !isMobile && { width: webCardWidth },
                 ]}
                 onPress={() => router.push(`/(tabs)/shop?category=${c.slug}`)}
                 testID={`category-${c.slug}`}
               >
-                <Image 
-                  source={{ uri: c.image }} 
-                  style={StyleSheet.absoluteFillObject} 
-                  contentFit="cover" 
-                  transition={200} 
+                <Image
+                  source={{ uri: c.image }}
+                  style={StyleSheet.absoluteFillObject}
+                  contentFit="cover"
+                  transition={200}
                 />
                 <LinearGradient
-                  colors={isMobile ? ['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.7)'] : ['rgba(0,0,0,0.05)', 'rgba(0,0,0,0.65)']}
+                  colors={
+                    isMobile
+                      ? ["rgba(0,0,0,0.1)", "rgba(0,0,0,0.7)"]
+                      : ["rgba(0,0,0,0.05)", "rgba(0,0,0,0.65)"]
+                  }
                   style={StyleSheet.absoluteFillObject}
                 />
-                
-                <View style={isMobile ? styles.mobileContent : styles.webContent}>
-                  <Text style={isMobile ? styles.mobileTitle : styles.webTitle} numberOfLines={isMobile ? 1 : 2}>
+
+                <View
+                  style={isMobile ? styles.mobileContent : styles.webContent}
+                >
+                  <Text
+                    style={isMobile ? styles.mobileTitle : styles.webTitle}
+                    numberOfLines={isMobile ? 1 : 2}
+                  >
                     {c.name}
                   </Text>
-                  
+
                   {isMobile ? (
                     <View style={styles.mobileCta}>
                       <Text style={styles.mobileCtaText}>Shop now</Text>
@@ -233,36 +300,37 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  wrap: { 
-    flex: 1, 
-    backgroundColor: colors.surface, 
+  wrap: {
+    flex: 1,
+    backgroundColor: colors.surface,
     paddingTop: spacing.xs,
   },
-  heroWrap: { 
-    width: '100%', 
-    position: 'relative',
-    backgroundColor: '#FAF5EE',
+  heroWrap: {
+    width: "100%",
+    position: "relative",
+    backgroundColor: "#FAF5EE",
   },
-  hero: { 
-    flex: 1, 
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden', 
+  hero: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
   },
-  heroImage: { 
-    width: '100%', 
-    height: '100%',
+  heroImage: {
+    width: "100%",
+    height: "100%",
+    pointerEvents: "none",
   },
 
   // Bottom Dots Indicator (like in Image 1)
   dotsContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 12,
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     gap: 6,
     zIndex: 10,
   },
@@ -270,11 +338,11 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.55)',
+    backgroundColor: "rgba(255, 255, 255, 0.55)",
   },
   activeDot: {
     width: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 4,
   },
 
@@ -285,19 +353,19 @@ const styles = StyleSheet.create({
     gap: CARD_GAP,
   },
   webCategoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    backgroundColor: '#F8F9FA',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    backgroundColor: "#F8F9FA",
     padding: 16,
   },
 
   // Mobile Category Styles
   mobileBannerCard: {
-    width: '100%',
+    width: "100%",
     height: 125,
     borderRadius: radius.lg,
-    overflow: 'hidden',
-    justifyContent: 'center',
+    overflow: "hidden",
+    justifyContent: "center",
     backgroundColor: colors.surfaceTertiary,
   },
   mobileContent: {
@@ -308,34 +376,34 @@ const styles = StyleSheet.create({
   mobileTitle: {
     fontFamily: font.extrabold,
     fontSize: 14,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     marginBottom: 4,
   },
   mobileCta: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 6,
   },
   mobileCtaText: {
     fontFamily: font.bold,
     fontSize: 11,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   greenArrowCircle: {
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#059669',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#059669",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   // Web Category Styles
   webBannerCard: {
     height: 280,
     borderRadius: radius.lg,
-    overflow: 'hidden',
-    justifyContent: 'flex-end',
+    overflow: "hidden",
+    justifyContent: "flex-end",
     backgroundColor: colors.surfaceTertiary,
   },
   webContent: {
@@ -345,20 +413,20 @@ const styles = StyleSheet.create({
   webTitle: {
     fontFamily: font.extrabold,
     fontSize: fontSize.sm,
-    color: '#FFFFFF',
-    textTransform: 'uppercase',
+    color: "#FFFFFF",
+    textTransform: "uppercase",
     letterSpacing: 0.5,
     lineHeight: 18,
   },
   webCta: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
     marginTop: 4,
   },
   webCtaText: {
     fontFamily: font.semibold,
     fontSize: 11,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
 });

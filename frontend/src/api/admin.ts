@@ -9,7 +9,7 @@ export const setAdminToken = (t: string | null) => {
 };
 
 export class AdminApiError extends Error {
-  status: number;
+  status: number;n                               
   constructor(status: number, message: string) {
     super(message);
     this.status = status;

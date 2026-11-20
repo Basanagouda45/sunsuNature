@@ -15,7 +15,7 @@ const { width } = Dimensions.get('window');
 const GAP = spacing.md;
 const CARD_W = (width - spacing.lg * 2 - GAP) / 2;
 const RECENT_KEY = 'sunsu_recent_searches';
-const POPULAR = ['Mango', 'Energy', 'Cocoa', 'Immunity', 'Beetroot', 'Lemon'];
+const POPULAR = ['Mango', 'Energy', 'Cocoa', 'Immunity',];
 
 export default function SearchScreen() {
   const insets = useSafeAreaInsets();

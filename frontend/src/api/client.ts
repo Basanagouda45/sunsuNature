@@ -1,5 +1,8 @@
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://sunsunature-3.onrender.com';
+// const BACKEND_URL = 'http://localhost:8000';
 const BASE = `${BACKEND_URL}/api`;
+
+console.log("ACTIVE BACKEND BASE URL:", BASE);
 
 let authToken: string | null = null;
 export const setAuthToken = (t: string | null) => {

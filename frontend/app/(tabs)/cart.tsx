@@ -14,6 +14,7 @@ import { QuantityStepper } from '@/src/components/QuantityStepper';
 import { EmptyState } from '@/src/components/EmptyState';
 import { Button } from '@/src/components/Button';
 import Footer from './footer';
+import { Trash2 } from 'lucide-react-native';
 
 export default function Cart() {
   const insets = useSafeAreaInsets();
@@ -145,7 +146,7 @@ export default function Cart() {
                         hitSlop={8} 
                         testID={`cart-remove-${item.slug}`}
                       >
-                        <Feather name="trash-2" size={18} color={colors.muted} />
+                       <Trash2 size={18} color={colors.muted} />
                       </Pressable>
                       <QuantityStepper
                         value={item.quantity}
